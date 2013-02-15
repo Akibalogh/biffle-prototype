@@ -49,7 +49,7 @@ def download_article_file(articleURL, articleFileDirectory, code):
 	
 
 		except urllib2.HTTPError, urllib2.URLError:
-			print "File download skipped: " + articleURL	
+			print "Article file download skipped: " + articleURL	
 			return None
 
 
@@ -137,10 +137,12 @@ def parse_news_articles(db, base_directory, query):
 					print "Inserted into articles: " + articleTitle.encode('ascii', 'ignore')
 
 
-def parse_websites(db, term):
+def parse_websites(db, base_directory, term):
 	webpages = db.webpages
 	api_base_url = "http://www.aafter.org:8983/solr/collection1/select?q="
 	api_args = "&wt=xml&fl=*,score"
+	term_without_spaces = term.replace(" ", "_")
+	webpageFileDirectory = base_directory + term_without_spaces + ".php--webpages" + "/"
 
 	try:
 		url_term = urllib2.quote(term)
@@ -162,13 +164,49 @@ def parse_websites(db, term):
 	urls = xml_tree.xpath("//response/result/doc/str[@name='url_s']/text()")
 	scores = xml_tree.xpath("//response/result/doc/float[@name='score']/text()")
 	versions = xml_tree.xpath("//response/result/doc/long[@name='_version_']/text()")
+		
+	# TODO: Subhankar needs to implement this tag in the XML
 	#summaries = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[@name='summary']/text()")
-
-	# TODO: Try: Download entire website file?
 
 	for i in range(len(titles)):
 		try:
+			fullWebpageText = None
+			code = base64.urlsafe_b64encode(os.urandom(18))
+			webpageFilePath = webpageFileDirectory + code
 
+			# Download full webpage and use full-text (if available) for keyword extraction
+		
+			# If a directory for files doesn't exist, create it
+			dir = os.path.dirname(webpageFileDirectory)
+
+			if not os.path.isdir(dir):
+				print "Created directory: " + dir
+				os.makedirs(dir)
+			
+			try:	
+				fullWebpage = urllib2.urlopen(urls[i])
+				outfile = open(webpageFilePath, 'w+')
+				fullWebpageText = fullWebpage.read()
+				outfile.write(fullWebpageText)
+				outfile.close
+
+				# Use lxml's HTML cleaner to remove markup
+				htmltree = lxml.html.fromstring(fullWebpageText)		
+				cleaner = lxml.html.clean.Cleaner(remove_unknown_tags=True)
+				cleaned_tree = cleaner.clean_html(htmltree)
+				fullWebpageText = cleaned_tree.text_content()
+	
+			except urllib2.HTTPError, urllib2.URLError:
+				print "Webpage file download skipped: " + webpageURL	
+				return None
+	
+			if (fullWebpageText is not None):
+				keyword_set = textrank(fullWebpageText) 
+			#else:
+			#keyword_set = textrank(summaries[i])
+	
+			keywords = list(keyword_set)
+		
 			# Check to see if webpage has already been inserted. If it has, don't do anything
 			if (webpages.find_one({ "url": urls[i] }) == None):
 				webpage = [{
@@ -176,9 +214,12 @@ def parse_websites(db, term):
 				"nr": num_result,
 				"url": urls[i],
 				"t": titles[i],
+				"c": code,
 				#"abs": summaries[i],
 				"s": scores[i],
-				"v": versions[i]
+				"v": versions[i],
+				"k": keywords,
+				"f": webpageFilePath
 				}]
 
 				webpage_id = webpages.insert(webpage)
@@ -213,7 +254,7 @@ if __name__ == "__main__":
 	
 		# For each keyword in MongoDB, parse the URLs
 		try:
-			parse_websites(db, term)
+			parse_websites(db, directory, term)
 			#parse_news_articles(db, directory, term_without_spaces)
 		except OSError:
 			print "ERROR: Directory for " + term + " doesn't exist! No users had these terms in their profiles?"	
