@@ -44,7 +44,9 @@ Schemas
 "t": "webpage title"
 "abs": "webpage summary"
 "s": "webpage score"
-"v": "version??"
+"v": "version??",
+"k": "keywords in webpage",
+"f": "file path on disk"
 }
 </pre>
 
@@ -76,6 +78,14 @@ Schemas
 "sit": share_datetime
 }</pre>
 
+<b>recommended_webpages</b>
+<pre>{
+"uid": user id
+"wid": webpage id
+"rt": recommended_datetime
+"uk": user_keywords_list
+"pk": presented_keywords
+}</pre>
 
 <b>user_click</b>
 <pre>{
