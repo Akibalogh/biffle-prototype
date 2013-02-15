@@ -17,10 +17,9 @@ Schemas
 =======
 
 <b>articles</b>
-
-<pre>query, score, code, date, articleTitle, articleURL, articleSource, summaryText, keywords, filePath, other meta data (like, retweets, …)
-
-{ "_id": 
+<pre>
+{
+"_id": 
 "q": "big data mongodb health care"
 "sc": "score"
 "c": "code"
@@ -31,70 +30,51 @@ Schemas
 "sr": "article source"
 "k": keyword list
 "f": filename of downloaded full article
-"m": metadata
+"m": metadata (retweets, etc.)
 }
 </pre>
 
 
-
-
 <b>topics</b> (list of topics)
-
-<pre>{ "big data": 
-
-   [ "mongodb", "hbase", "infiniDB" ….] 
-
- "cloud computing":
-
-   ["sss", "sdfds"]
-   
- }</pre>
+<pre>{
+   "big data": [ "mongodb", "hbase", "infiniDB" ….] 
+   "cloud computing": ["sss", "sdfds"]
+}</pre>
 
 
 <b>industries</b>
-
 <pre>{ "in": ["healthcare", "transportation", …] }</pre>
 
 
 <b>operations</b>
-
 <pre>{"op": [ "deployment", "security", ,..] }</pre>
 
 
 <b>recommended_articles</b>
-
 <pre>{
-
 "uid": user id
-
 "aid": article id
-
 "rt": recommend_datetime
-
 "ct": click_datetime
-
 "st": save_datetime
-
 "uk": user_keywords_list
-
 "pk": presented_keywords
-
 "lt": like_datetime
-
 "sit": share_datetime
-
 }</pre>
 
 
 <b>user_click</b>
-
-<pre>{ "user_id": 123,
-"act": [ {"k": "keyword1", "c": count},  {"k": "keyword1", "c": count} ] }</pre>
-
+<pre>{
+"uid": 123,
+"act": [
+         {"k": "keyword1", "c": count},
+         {"k": "keyword1", "c": count}
+       ]
+}</pre>
 
 
 <b>user</b>
-
 <pre>_id, linkedin unique ID, email address, linkedin interests, industry, keywords(list of products)
 
 { "_id": MongoDB ID,
@@ -106,4 +86,3 @@ Schemas
   }
 
 TODO: Add weighted keyword?</pre>
-
