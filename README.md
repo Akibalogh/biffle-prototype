@@ -44,7 +44,9 @@ Schemas
 "t": "webpage title"
 "abs": "webpage summary"
 "s": "webpage score"
-"v": "version??"
+"v": "version??",
+"k": "keywords in webpage",
+"f": "file path on disk"
 }
 </pre>
 
