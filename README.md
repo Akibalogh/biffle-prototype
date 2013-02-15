@@ -67,9 +67,7 @@ Schemas
 <b>user_click</b>
 <pre>{
 "uid": 123,
-"act": [
-         {"k": "keyword1", "c": count},
-         {"k": "keyword1", "c": count}
+"act": [ {"k": "keyword1", "c": count}, {"k": "keyword1", "c": count}
        ]
 }</pre>
 
