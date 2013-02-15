@@ -1,0 +1,4 @@
+#!/bin/bash
+
+python /root/biffle-prototype/article-parse.py
+python /root/biffle-prototype/send-recommendations.py

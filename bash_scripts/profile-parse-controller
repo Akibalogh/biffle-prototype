@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PROFILE_DIR=/usr/share/downloaded-li-profiles
+
+for f in $PROFILE_DIR/*
+do
+	python /root/biffle-prototype/profile-parse.py $PROFILE_DIR/$f
+done
