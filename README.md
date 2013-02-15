@@ -76,6 +76,14 @@ Schemas
 "sit": share_datetime
 }</pre>
 
+<b>recommended_webpages</b>
+<pre>{
+"uid": user id
+"wid": webpage id
+"rt": recommended_datetime
+"uk": user_keywords_list
+"pk": presented_keywords
+}</pre>
 
 <b>user_click</b>
 <pre>{
