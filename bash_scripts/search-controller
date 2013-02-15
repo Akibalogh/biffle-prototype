@@ -2,4 +2,4 @@
 SEARCH_GEN_PATH=/root/biffle-prototype
 
 python $SEARCH_GEN_PATH/search-terms-mongo.py $SEARCH_GEN_PATH/BigDataTerms $SEARCH_GEN_PATH/industries
-python $SEARCH_GEN_PATH/search-gen-mongo.py /var/www/html/search-scripts 
+python $SEARCH_GEN_PATH/search-gen-for-articles.py /var/www/html/search-scripts 
