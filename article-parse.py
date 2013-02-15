@@ -53,70 +53,8 @@ def download_article_file(articleURL, articleFileDirectory, code):
 			return None
 
 
-def recommend_articles(db):
-	recommended_articles = db.recommended_articles
-	users = db.users
-	articles = db.articles
 
-	# For all users, recommend 5 articles
-	for user in users.find():
-
-		print "Making recommendations for user " + str(user['e'])
-		potential_article_matches = []
-		
-		# Find all articles that match the user's keywords
-		for keyword in user['k']:
-			# Regex approximate match for string containing keyword -- similar to SQL LIKE
-			# TODO: Implement exact match for keyword
-			article_matches = articles.find({ "k": { "$regex": ".*" + re.escape(keyword) + ".*" } })
-	
-			for match in article_matches:
-				print "Potential match! " + user['e'] + " could get " + str(match['_id'])
-				potential_article_matches.append(match['_id'])
-		
-		# Make max 5 recommendations
-		recommendations_to_make = min(5, len(potential_article_matches)) 
-		recommendations_made = 0
-
-		# Pick articles at random
-		while (recommendations_made <= recommendations_to_make):
-			if (len(potential_article_matches) == 0):
-				print "No more articles to recommend to " + user['e']
-				recommendations_made = (recommendations_to_make + 1)
-				continue
-		
-			# Random is base-1 while pop is base-0
-			random_num = random.randrange(1,len(potential_article_matches) + 1)
-			chosen_article_id = potential_article_matches.pop(random_num - 1)
-
-			chosen_article = articles.find_one( { "_id": chosen_article_id })
-			chosen_article_title = chosen_article['t']
-			chosen_article_title = chosen_article_title.encode('ascii', 'ignore')
-
-			# Check that articles haven't been sent previously
-			if (recommended_articles.find( { "uid": user['_id'], "aid": chosen_article_id } ).count() != 0):
-				print "Article was recommended to " + user['e'] + " in the past. Ignore (" + chosen_article_title + ")"
-				pass
-			else:
-				# Put the article in recommended articles
-				recommended_article = [{
-					"uid": user['_id'],
-					"aid": chosen_article_id,
-					"rt": datetime.today(),
-					#"ct": click_datetime,
-					#"st": save_datetime,
-					"uk": user['k'],
-					#"pk": presented_keywords,
-					#"lt": like_datetime,
-					#"sit": share_datetime,
-				}]
-
-				recommended_article_id = recommended_articles.insert(recommended_article)
-				print "Recommended: " + chosen_article_title
-				recommendations_made += 1
-
-
-def parse_urls(db, base_directory, query):
+def parse_news_articles(db, base_directory, query):
 	# Note: Assumes that path is stored as <query>.php/
 	path = base_directory + query + ".php" + "/"
 	
@@ -199,6 +137,57 @@ def parse_urls(db, base_directory, query):
 					print "Inserted into articles: " + articleTitle.encode('ascii', 'ignore')
 
 
+def parse_websites(db, term):
+	webpages = db.webpages
+	api_base_url = "http://www.aafter.org:8983/solr/collection1/select?q="
+	api_args = "&wt=xml&fl=*,score"
+
+	try:
+		url_term = urllib2.quote(term)
+		api_url = api_base_url + url_term + api_args
+		xml_response = urllib2.urlopen(api_url)
+		#xml_text = xml_response.read()
+
+	except urllib2.HTTPError, urllib2.URLError:
+		print "ERROR: Urllib couldn't download XML from API"
+	
+	# Parse the XML responses
+	xml_tree = etree.parse(xml_response)
+
+	query = xml_tree.xpath("//response/lst[@name='responseHeader']/lst[@name='params']/str[@name='q']/text()")
+	num_result = xml_tree.xpath("//response/result")[0].attrib['numFound']
+
+	# Each website result will be stored as a list
+	titles = xml_tree.xpath("//response/result/doc/str[@name='name']/text()")	
+	urls = xml_tree.xpath("//response/result/doc/str[@name='url_s']/text()")
+	scores = xml_tree.xpath("//response/result/doc/float[@name='score']/text()")
+	versions = xml_tree.xpath("//response/result/doc/long[@name='_version_']/text()")
+	#summaries = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[@name='summary']/text()")
+
+	# TODO: Try: Download entire website file?
+
+	for i in range(len(titles)):
+		try:
+
+			# Check to see if webpage has already been inserted. If it has, don't do anything
+			if (webpages.find_one({ "url": urls[i] }) == None):
+				webpage = [{
+				"q": query,
+				"nr": num_result,
+				"url": urls[i],
+				"t": titles[i],
+				#"abs": summaries[i],
+				"s": scores[i],
+				"v": versions[i]
+				}]
+
+				webpage_id = webpages.insert(webpage)
+				print "Inserted into webpages: " + titles[i].encode('ascii', 'ignore')
+
+		except IndexError:
+			print "ERROR: Index Error at " + term + " when processing list item " + str(i)
+			print "See XML response at: " + api_url
+
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
@@ -220,12 +209,11 @@ if __name__ == "__main__":
 	
 	for term in search_terms:
 		# Replace any spaces in term with underscore (_)
-		term = term.replace(" ", "_")
+		term_without_spaces = term.replace(" ", "_")
 	
 		# For each keyword in MongoDB, parse the URLs
 		try:
-			parse_urls(db, directory, term)
+			parse_websites(db, term)
+			#parse_news_articles(db, directory, term_without_spaces)
 		except OSError:
 			print "ERROR: Directory for " + term + " doesn't exist! No users had these terms in their profiles?"	
-
-	recommend_articles(db)
