@@ -197,7 +197,7 @@ def parse_websites(db, base_directory, term):
 				fullWebpageText = cleaned_tree.text_content()
 	
 			except urllib2.HTTPError, urllib2.URLError:
-				print "Webpage file download skipped: " + webpageURL	
+				print "Webpage file download skipped: " + urls[i]	
 				return None
 	
 			if (fullWebpageText is not None):
@@ -233,8 +233,8 @@ def parse_websites(db, base_directory, term):
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
 		print "Usage: python article-parse <output-directory>"
-		print "Output directory not specified. Will default to /root/search-results/"
-		directory = "/root/search-results/"
+		print "Output directory not specified. Will default to /data/search-results/"
+		directory = "/data/search-results/"
 	else:
 		directory = sys.argv[1]	
 
