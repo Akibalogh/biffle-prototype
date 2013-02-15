@@ -26,6 +26,7 @@ Schemas
 "sd": "search date"
 "pd": "publish date"
 "url" "article url"
+"t": "article title"
 "abs": "summary text"
 "sr": "article source"
 "k": keyword list
@@ -34,6 +35,18 @@ Schemas
 }
 </pre>
 
+<b>webpages</b>
+<pre>
+{
+"q": "query"
+"nr": "number of total results returned from search query"
+"url": "webpage url"
+"t": "webpage title"
+"abs": "webpage summary"
+"s": "webpage score"
+"v": "version??"
+}
+</pre>
 
 <b>topics</b> (list of topics)
 <pre>{
