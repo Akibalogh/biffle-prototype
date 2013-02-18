@@ -143,12 +143,12 @@ def parse_websites(db, base_directory, term):
 	api_args = "&wt=xml&fl=*,score"
 	term_without_spaces = term.replace(" ", "_")
 	webpageFileDirectory = base_directory + term_without_spaces + ".php--webpages" + "/"
+	url_term = urllib2.quote(term)
 
 	try:
-		url_term = urllib2.quote(term)
 		api_url = api_base_url + url_term + api_args
+		print "Downloading XML from " + api_url
 		xml_response = urllib2.urlopen(api_url)
-		#xml_text = xml_response.read()
 
 	except urllib2.HTTPError, urllib2.URLError:
 		print "ERROR: Urllib couldn't download XML from API"
@@ -163,61 +163,65 @@ def parse_websites(db, base_directory, term):
 	titles = xml_tree.xpath("//response/result/doc/str[@name='name']/text()")	
 	urls = xml_tree.xpath("//response/result/doc/str[@name='url_s']/text()")
 	scores = xml_tree.xpath("//response/result/doc/float[@name='score']/text()")
-	versions = xml_tree.xpath("//response/result/doc/long[@name='_version_']/text()")
-		
-	# TODO: Subhankar needs to implement this tag in the XML
-	#summaries = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[@name='summary']/text()")
+
+	# TODO: Finish adding SR's strings 
+	meta_descriptions = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[1]/text()")
+	meta_keywords = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[2]/text()")
+	summaries = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[3]/text()")
 
 	for i in range(len(titles)):
 		try:
-			fullWebpageText = None
-			code = base64.urlsafe_b64encode(os.urandom(18))
-			webpageFilePath = webpageFileDirectory + code
-
-			# Download full webpage and use full-text (if available) for keyword extraction
-		
-			# If a directory for files doesn't exist, create it
-			dir = os.path.dirname(webpageFileDirectory)
-
-			if not os.path.isdir(dir):
-				print "Created directory: " + dir
-				os.makedirs(dir)
-			
-			try:	
-				fullWebpage = urllib2.urlopen(urls[i])
-				outfile = open(webpageFilePath, 'w+')
-				fullWebpageText = fullWebpage.read()
-				outfile.write(fullWebpageText)
-				outfile.close
-
-				# Use lxml's HTML cleaner to remove markup
-				htmltree = lxml.html.fromstring(fullWebpageText)		
-				cleaner = lxml.html.clean.Cleaner(remove_unknown_tags=True)
-				cleaned_tree = cleaner.clean_html(htmltree)
-				fullWebpageText = cleaned_tree.text_content()
-	
-			except urllib2.HTTPError, urllib2.URLError:
-				print "Webpage file download skipped: " + urls[i]	
-				return None
-	
-			if (fullWebpageText is not None):
-				keyword_set = textrank(fullWebpageText) 
-			#else:
-			#keyword_set = textrank(summaries[i])
-	
-			keywords = list(keyword_set)
-		
 			# Check to see if webpage has already been inserted. If it has, don't do anything
 			if (webpages.find_one({ "url": urls[i] }) == None):
+			
+				fullWebpageText = None
+				code = base64.urlsafe_b64encode(os.urandom(18))
+				webpageFilePath = webpageFileDirectory + code
+
+				# Download full webpage and use full-text (if available) for keyword extraction
+		
+				# If a directory for files doesn't exist, create it
+				dir = os.path.dirname(webpageFileDirectory)
+
+				if not os.path.isdir(dir):
+					print "Created directory: " + dir
+					os.makedirs(dir)
+			
+				try:	
+					fullWebpage = urllib2.urlopen(urls[i])
+					outfile = open(webpageFilePath, 'w+')
+					fullWebpageText = fullWebpage.read()
+					outfile.write(fullWebpageText)
+					outfile.close
+
+					# Use lxml's HTML cleaner to remove markup
+					htmltree = lxml.html.fromstring(fullWebpageText)		
+					cleaner = lxml.html.clean.Cleaner(remove_unknown_tags=True)
+					cleaned_tree = cleaner.clean_html(htmltree)
+					fullWebpageText = cleaned_tree.text_content()
+	
+				except (urllib2.HTTPError, urllib2.URLError, UnicodeDecodeError):
+					print "Webpage file download skipped: " + urls[i]
+					return None
+
+				
+				if (fullWebpageText is not None):
+					keyword_set = textrank(fullWebpageText) 
+				#else:
+				#keyword_set = textrank(summaries[i])
+		
+				keywords = list(keyword_set)
+		
 				webpage = [{
 				"q": query,
 				"nr": num_result,
 				"url": urls[i],
 				"t": titles[i],
 				"c": code,
-				#"abs": summaries[i],
+				"md": meta_descriptions[i],
+				"mk": meta_keywords[i],
+				"abs": summaries[i],
 				"s": scores[i],
-				"v": versions[i],
 				"k": keywords,
 				"f": webpageFilePath
 				}]
@@ -244,8 +248,8 @@ if __name__ == "__main__":
 	search_terms = db.search_terms
 
 	all_search_terms = search_terms.find_one()
-	# TODO: Currently search_terms is one big list. Separate into individual items?
 	
+	# search_terms is one big list
 	search_terms = all_search_terms['terms']
 	
 	for term in search_terms:
@@ -255,6 +259,6 @@ if __name__ == "__main__":
 		# For each keyword in MongoDB, parse the URLs
 		try:
 			parse_websites(db, directory, term)
-			#parse_news_articles(db, directory, term_without_spaces)
+			parse_news_articles(db, directory, term_without_spaces)
 		except OSError:
 			print "ERROR: Directory for " + term + " doesn't exist! No users had these terms in their profiles?"	

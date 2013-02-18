@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Profile Parse
+
+PROFILE_DIR=/usr/share/downloaded-li-profiles
+
+for f in $PROFILE_DIR/*
+do
+	python /root/biffle-prototype/profile-parse.py $f
+done
+
+
+# Search Generation
+
+SEARCH_GEN_PATH=/root/biffle-prototype
+
+python $SEARCH_GEN_PATH/search-terms-mongo.py $SEARCH_GEN_PATH/BigDataTerms $SEARCH_GEN_PATH/industries
+python $SEARCH_GEN_PATH/search-terms-mongo.py $SEARCH_GEN_PATH/PharmaTerms $SEARCH_GEN_PATH/industries
+python $SEARCH_GEN_PATH/search-gen-for-articles.py /var/www/html/search-scripts 
+
+
+# Search Result Download
+
+#  Download latest serch API results
+PHP_FILE_DIR=/var/www/html/search-scripts
+DOWNLOAD_DIR=/data/search-results
+LOCALHOST_URL=http://50.22.200.186/search-scripts
+date=`date +"%m-%d-%Y"`
+
+for file in $( ls $PHP_FILE_DIR ); do
+	
+	# Skip index.html file
+	if [ $file != "index.html" ]; then
+		echo "Downloaded $file"
+		if [ ! -d "$DOWNLOAD_DIR/$file" ]; then
+			mkdir $DOWNLOAD_DIR/$file
+		fi
+		wget $LOCALHOST_URL/$file -O $DOWNLOAD_DIR/$file/$file-$date
+	fi
+done
+
+echo "cron-downlad ran at `date`"
+
+
+# Article Parse
+python /root/biffle-prototype/article-parse.py
+
+
+# Make Recommendations
+python /root/biffle-prototype/make-recommendations.py
+
+
+# Send Articles
+python /root/biffle-prototype/send-recommendations.py

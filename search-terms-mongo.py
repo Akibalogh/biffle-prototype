@@ -27,7 +27,7 @@ for t in terms:
 # Connect to MongoDB
 connection = MongoClient()
 db = connection.db
-search_terms = db.search_terms
+search_terms = db.all_terms
 
 # save 1 record with _id 1
 ret = search_terms.save({'_id': 1, 'terms': terms})
