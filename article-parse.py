@@ -164,7 +164,7 @@ def parse_websites(db, base_directory, term):
 	urls = xml_tree.xpath("//response/result/doc/str[@name='url_s']/text()")
 	scores = xml_tree.xpath("//response/result/doc/float[@name='score']/text()")
 
-	# TODO: Finish adding SR's strings 
+	# Add summary and meta information from Subhankar's API
 	meta_descriptions = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[1]/text()")
 	meta_keywords = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[2]/text()")
 	summaries = xml_tree.xpath("//response/result/doc/arr[@name='features']/str[3]/text()")
@@ -189,6 +189,7 @@ def parse_websites(db, base_directory, term):
 			
 				try:	
 					fullWebpage = urllib2.urlopen(urls[i])
+					print "Opening website URL: " + str(urls[i])
 					outfile = open(webpageFilePath, 'w+')
 					fullWebpageText = fullWebpage.read()
 					outfile.write(fullWebpageText)
@@ -200,8 +201,8 @@ def parse_websites(db, base_directory, term):
 					cleaned_tree = cleaner.clean_html(htmltree)
 					fullWebpageText = cleaned_tree.text_content()
 	
-				except (urllib2.HTTPError, urllib2.URLError, UnicodeDecodeError):
-					print "Webpage file download skipped: " + urls[i]
+				except (urllib2.HTTPError, urllib2.URLError, UnicodeDecodeError, lxml.etree.ParserError):
+					print "ERROR: Webpage file download skipped: " + urls[i]
 					return None
 
 				
