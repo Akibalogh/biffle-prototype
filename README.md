@@ -42,6 +42,8 @@ Schemas
 "nr": "number of total results returned from search query"
 "url": "webpage url"
 "t": "webpage title"
+"md": "meta description content tag"
+"mk": "meta keywords"
 "abs": "webpage summary"
 "s": "webpage score"
 "v": "version??",
