@@ -100,6 +100,7 @@ Schemas
 { "_id": MongoDB ID,
   "lid": linkedin unique ID,
   "e": akibalogh@gmail.com,
+  "n": Aki Balogh,
   "ln": linkedin interests (pulled from profile summary, job summary and skills)
   "in": "computer software",
   "k": ["Greenplum", "InfiniDB"]
