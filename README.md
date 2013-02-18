@@ -42,6 +42,8 @@ Schemas
 "nr": "number of total results returned from search query"
 "url": "webpage url"
 "t": "webpage title"
+"md": "meta description content tag"
+"mk": "meta keywords"
 "abs": "webpage summary"
 "s": "webpage score"
 "v": "version??",
@@ -100,6 +102,7 @@ Schemas
 { "_id": MongoDB ID,
   "lid": linkedin unique ID,
   "e": akibalogh@gmail.com,
+  "n": Aki Balogh,
   "ln": linkedin interests (pulled from profile summary, job summary and skills)
   "in": "computer software",
   "k": ["Greenplum", "InfiniDB"]
