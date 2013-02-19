@@ -6,7 +6,9 @@ PROFILE_DIR=/usr/share/downloaded-li-profiles
 
 for f in $PROFILE_DIR/*
 do
-	python /root/biffle-prototype/profile-parse.py $f
+	if [ -f $f ]; then
+		python /root/biffle-prototype/profile-parse.py $f
+	fi
 done
 
 
@@ -17,7 +19,9 @@ WORDCLOUD_PATH=$SEARCHGEN_PATH/wordclouds
 
 for f in $WORDCLOUD_PATH/*
 do
-	python $SEARCH_GEN_PATH/search-terms-mongo.py $f
+	if [ -f $f ]; then
+		python $SEARCH_GEN_PATH/search-terms-mongo.py $f
+	fi
 done
 
 python $SEARCH_GEN_PATH/search-gen-for-articles.py 
