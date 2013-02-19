@@ -13,10 +13,14 @@ done
 # Search Generation
 
 SEARCH_GEN_PATH=/root/biffle-prototype
+WORDCLOUD_PATH=$SEARCHGEN_PATH/wordclouds
 
-python $SEARCH_GEN_PATH/search-terms-mongo.py $SEARCH_GEN_PATH/BigDataTerms $SEARCH_GEN_PATH/industries
-python $SEARCH_GEN_PATH/search-terms-mongo.py $SEARCH_GEN_PATH/PharmaTerms $SEARCH_GEN_PATH/industries
-python $SEARCH_GEN_PATH/search-gen-for-articles.py /var/www/html/search-scripts 
+for f in $WORDCLOUD_PATH/*
+do
+	python $SEARCH_GEN_PATH/search-terms-mongo.py $f
+done
+
+python $SEARCH_GEN_PATH/search-gen-for-articles.py 
 
 
 # Search Result Download
@@ -43,7 +47,7 @@ echo "cron-downlad ran at `date`"
 
 
 # Article Parse
-python /root/biffle-prototype/article-parse.py
+python /root/biffle-prototype/parse-and-download.py
 
 
 # Make Recommendations

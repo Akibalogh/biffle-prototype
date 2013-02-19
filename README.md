@@ -5,7 +5,7 @@ Prototype for Biffle, a recommendation engine for Developer news
 <br>
 <br>
 Components:
-<br><b>article-parse</b>: Parse articles returned from a search
+<br><b>parse-and-download</b>: Download and parse news articles and websites
 <br><b>profile-parse</b>: Parse a LinkedIn profile and insert into MongoDB
 <br><b>search-generation</b>:Generate a combination of search terms based on product names and industries
 <br>Written by Victor Hong
