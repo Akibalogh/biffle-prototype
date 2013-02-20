@@ -92,7 +92,9 @@ Schemas
 <b>user_click</b>
 <pre>{
 "uid": 123,
-"act": [ {"k": "keyword1", "c": count}, {"k": "keyword1", "c": count} ]
+"aid": article id (if article was clicked)
+"wid": webpage id (if webpage was clicked)
+"ct": date/time of click
 }</pre>
 
 
