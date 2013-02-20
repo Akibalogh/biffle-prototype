@@ -7,21 +7,13 @@ if len(sys.argv) != 2:
 	sys.exit() 
 
 term_file = sys.argv[1]
-#industry_file = sys.argv[2]
 
 wordcloud = open(term_file).read().splitlines()
-#industry = open(industry_file).read().splitlines()
 
 # generate search terms
 terms = []
 for word in wordcloud:
-	#for ind in industry:
-	#	t = ' '.join([word, ind])
-	#	terms.append(t)
 	terms.append(word)
-
-for t in terms:
-	print t
 
 # Connect to MongoDB
 connection = MongoClient()
