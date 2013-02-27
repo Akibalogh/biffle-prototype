@@ -19,7 +19,7 @@ Schemas
 <b>articles</b>
 <pre>
 {
-"_id": 
+"_id": MongoDB ID
 "q": "big data mongodb health care"
 "sc": "score"
 "c": "code"
@@ -38,6 +38,7 @@ Schemas
 <b>webpages</b>
 <pre>
 {
+"_id": MongoDB ID
 "q": "query"
 "nr": "number of total results returned from search query"
 "url": "webpage url"
@@ -52,7 +53,7 @@ Schemas
 }
 </pre>
 
-<b>topics</b> (list of topics)
+<b>topics - Not Implemented</b> (list of topics)
 <pre>{
    "big data": [ "mongodb", "hbase", "infiniDB" ….] 
    "cloud computing": ["sss", "sdfds"]
@@ -63,12 +64,13 @@ Schemas
 <pre>{ "in": ["healthcare", "transportation", …] }</pre>
 
 
-<b>operations</b>
+<b>operations - Not Implemented</b>
 <pre>{"op": [ "deployment", "security", ,..] }</pre>
 
 
 <b>recommended_articles</b>
 <pre>{
+"_id": MongoDB ID
 "uid": user id
 "aid": article id
 "rt": recommend_datetime
@@ -82,6 +84,7 @@ Schemas
 
 <b>recommended_webpages</b>
 <pre>{
+"_id": MongoDB ID
 "uid": user id
 "wid": webpage id
 "rt": recommended_datetime
@@ -89,25 +92,40 @@ Schemas
 "pk": presented_keywords
 }</pre>
 
-<b>user_click</b>
-<pre>{
-"uid": 123,
-"aid": article id (if article was clicked)
-"wid": webpage id (if webpage was clicked)
-"ct": date/time of click
+<b>user_clicks - Not Implemented</b>
+<pre>
+{
+   "_id": MongoDB ID,
+   "uid": 123,
+   "aid": article id (if article was clicked)
+   "wid": webpage id (if webpage was clicked)
+   "ct": date/time of click
 }</pre>
 
 
-<b>user</b>
-<pre>_id, linkedin unique ID, email address, linkedin interests, industry, keywords(list of products)
-
-{ "_id": MongoDB ID,
+<b>users</b>
+<pre>
+{
+  "_id": MongoDB ID,
   "lid": linkedin unique ID,
   "e": akibalogh@gmail.com,
   "n": Aki Balogh,
   "ln": linkedin interests (pulled from profile summary, job summary and skills)
   "in": "computer software",
   "k": ["Greenplum", "InfiniDB"]
-  }
+}</pre>
+<br>
+<b>TODO: Add weighted keyword?</b>
+<br>
 
-TODO: Add weighted keyword?</pre>
+<b>so_users</b>
+<pre>
+{  
+   "_id": MongoDB ID,
+   "sid": StackOverflow ID,
+   "dn": "akibalogh",
+   "eh": "2dd0d3404eed2283b5307d16cec68896",
+   "l": "Cambridge, MA",
+   "w": "linkedin.com/in/akibalogh"
+}
+</pre>
