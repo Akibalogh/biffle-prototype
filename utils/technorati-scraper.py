@@ -49,26 +49,23 @@ try:
 	for link in baseHTML.find_all(href=re.compile(SECTION + APPEND)):
 		maxPage = max(int(link.get('href')[33:].rstrip('/')), maxPage)
 
-	# Get URLs from the first page
-	newUrls = getBlogUrls(BASE_URL + SECTION)
-	urlCounter += len(newUrls)
-	# pageNum is set to 1 at start
-	print "Page: " + str(pageNum) + "  Added: " + str(len(newUrls)) + " Total: " + str(urlList)
+	# Adjust by 1 since for loop is base-0
+	for pageNum in range(1,maxPage + 1):
+		# Check to see whether Mongo already has this data. If it does, then continue to the next
+		if (tech_blogs.find({ '_id': pageNum }).count() != 0):
+			print "Skipping Page: " + str(pageNum)
+			continue
 
-	# Upsert is set to True so that if the record doesn't exist, it gets created
-	ret = all_terms.update({'_id': pageNum},
-		{'$push': {'u': newUrls}},
-		True ) 
-
-	# Skip page 1 as we've already pulled it
-	for pageNum in range(2,maxPage + 1):
 		newUrls = getBlogUrls(BASE_URL + SECTION + APPEND + str(pageNum))
 		urlCounter += len(newUrls)
-		print "Page: " + str(pageNum) + "  Added: " + str(len(newUrls)) + " Total: " + str(urlList)
+		print "Page: " + str(pageNum) + "  Added: " + str(len(newUrls)) + " Total: " + str(urlCounter)
 
-		# Add terms into record 1. Upsert is set to True
-		ret = all_terms.update({'_id': pageNum},
-			{'$push': {'u': newUrls}},
+		# Check to see if the record already exists. If not, insert it
+		if (tech_blogs.find({ '_id': pageNum }).count() == 0):
+			# Upsert URLs into a record
+			ret = tech_blogs.update({'_id': pageNum},
+				{'$push': {'u': newUrls}},
+				True )
 
 except (urllib2.HTTPError, urllib2.URLError):
 	print "ERROR: Couldn't download " + BASE_URL + SECTION + pageNum 
