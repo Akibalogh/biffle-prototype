@@ -129,3 +129,11 @@ Schemas
    "w": "linkedin.com/in/akibalogh"
 }
 </pre>
+
+<b>tech_blogs</b>
+<pre>
+{  
+   "_id": page number of blog on Technorati, (i.e. '1' for http://technorati.com/blogs/directory/technology/page-1)
+   "u": list of blog URLs on page
+}
+</pre>
