@@ -11,7 +11,7 @@ from time import time, sleep
 import sys
 
 class SEAPI():
-    def __init__(self, **kwargs):
+    def __init__(self, key, **kwargs):
         """Use kwargs to set default parameters, e.g.
         >>> se = SEAPI(site="stackoverflow")"""
         self.default_params = {"pagesize": 100}  # explicit "pagesize" is required
@@ -19,7 +19,7 @@ class SEAPI():
 
         self.api_address = "http://api.stackexchange.com"
         self.api_version = "2.1"
-        self.key = "F9V4YsNAO1aBrgFRZlReWQ((" # Replace with your own API key
+        self.key = key
         self.access_token = ""
 
         if self.key:
