@@ -17,18 +17,23 @@ db = connection.db
 tech_blogs = db.tech_blogs
 
 
-def getBlogUrls(pageUrl):
+def getBlogData(pageUrl):
 	site = urllib2.urlopen(pageUrl)
 	siteHTML = BeautifulSoup(site.read().decode('utf-8'))
 	siteLinks = []
+	authScores = []
 
 	for table in siteHTML.find_all('td', class_='site-details'):
 		links = table.find_all("a", class_="offsite")
-
 		for link in links:
 			siteLinks.append(link['href'])
 
-	return siteLinks
+	for table in siteHTML.find_all('td', class_='statistics'):
+		auths = table.find_all("strong", class_="authority-count")
+		for auth in auths:
+			authScores.append(re.search('\d+', auth.contents[0]).group(0))
+
+	return zip(siteLinks, authScores)
 
 
 
@@ -56,15 +61,15 @@ try:
 			print "Skipping Page: " + str(pageNum)
 			continue
 
-		newUrls = getBlogUrls(BASE_URL + SECTION + APPEND + str(pageNum))
-		urlCounter += len(newUrls)
-		print "Page: " + str(pageNum) + "  Added: " + str(len(newUrls)) + " Total: " + str(urlCounter)
+		newBlogs = getBlogData(BASE_URL + SECTION + APPEND + str(pageNum))
+		urlCounter += len(newBlogs)
+		print "Page: " + str(pageNum) + "  Added: " + str(len(newBlogs)) + " Total: " + str(urlCounter)
 
 		# Check to see if the record already exists. If not, insert it
 		if (tech_blogs.find({ '_id': pageNum }).count() == 0):
 			# Upsert URLs into a record
 			ret = tech_blogs.update({'_id': pageNum},
-				{'$push': {'u': newUrls}},
+				{'$push': {'b': newBlogs}},
 				True )
 
 except (urllib2.HTTPError, urllib2.URLError):
