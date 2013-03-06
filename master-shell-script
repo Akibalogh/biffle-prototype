@@ -2,29 +2,28 @@
 
 # Profile Parse
 
-PROFILE_DIR=/usr/share/downloaded-li-profiles
+BIFFLE_PATH=/root/biffle-prototype
+PROFILE_DIR=/data/profiles
 
 for f in $PROFILE_DIR/*
 do
 	if [ -f $f ]; then
-		python /root/biffle-prototype/profile-parse.py $f
+		python $BIFFLE_PATH/profile-parse.py $f
 	fi
 done
 
 
 # Search Generation
-
-SEARCH_GEN_PATH=/root/biffle-prototype
-WORDCLOUD_PATH=$SEARCH_GEN_PATH/wordclouds
+WORDCLOUD_PATH=$BIFFLE_PATH/wordclouds
 
 for f in $WORDCLOUD_PATH/*
 do
 	if [ -f $f ]; then
-		python $SEARCH_GEN_PATH/search-terms-mongo.py $f
+		python $BIFFLE_PATH/search-terms-mongo.py $f
 	fi
 done
 
-python $SEARCH_GEN_PATH/search-gen-for-articles.py 
+python $BIFFLE_PATH/search-gen-for-articles.py 
 
 
 # Search Result Download
@@ -51,12 +50,12 @@ echo "cron-downlad ran at `date`"
 
 
 # Article Parse
-python /root/biffle-prototype/parse-and-download.py
+python $BIFFLE_PATH/parse-and-download.py
 
 
 # Make Recommendations
-python /root/biffle-prototype/make-recommendations.py
+python $BIFFLE_PATH/make-recommendations.py
 
 
 # Send Articles
-python /root/biffle-prototype/send-recommendations.py
+python $BIFFLE_PATH/send-recommendations.py
