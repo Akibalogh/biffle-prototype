@@ -64,7 +64,7 @@ class SEAPI():
 
 	for user in fetch_return:
 		# Ignore users already in MongoDB
-		if (so_users.find_one({"sid": user['account_id']}) == None):
+		if (so_users.find_one({"sid": user['user_id']}) == None):
 			try:
         	        	email_hash = user['profile_image'][31:63]
 	        	        if(len(email_hash) < 32):
@@ -83,7 +83,7 @@ class SEAPI():
         		        web_url = ""
 
 			single_user = {  
-				"sid": user['account_id'],
+				"sid": user['user_id'],
 				"dn": user['display_name'],
 				"eh": email_hash,
 				"l": location,
