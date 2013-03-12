@@ -99,7 +99,7 @@ Schemas
    "uid": 123,
    "aid": article id (if article was clicked)
    "wid": webpage id (if webpage was clicked)
-   "did": ad url (if ad was clicked)
+   "ad_url": url of ad (if ad was clicked)
    "ct": date/time of click
 }</pre>
 
