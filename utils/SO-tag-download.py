@@ -4,9 +4,8 @@ from pymongo import MongoClient
 import hashlib
 
 connection = MongoClient()
-db = connection.db
-users = db.users
-so_users = db.so_users
+users = conncetion.db.users
+so_users = connection.perm.so_users
 
 api_key = "F9V4YsNAO1aBrgFRZlReWQ(("
 #api_key = ""

@@ -13,27 +13,27 @@ urlCounter = 0
 
 # Initialize MongoDB
 connection = MongoClient()
-db = connection.db
-tech_blogs = db.tech_blogs
+perm = connection.perm
+tech_blogs = perm.tech_blogs
 
 
 def getBlogData(pageUrl):
 	site = urllib2.urlopen(pageUrl)
 	siteHTML = BeautifulSoup(site.read().decode('utf-8'))
-	siteLinks = []
-	authScores = []
+	site_links = []
+	auth_scores = []
 
 	for table in siteHTML.find_all('td', class_='site-details'):
 		links = table.find_all("a", class_="offsite")
 		for link in links:
-			siteLinks.append(link['href'])
+			site_links.append(link['href'])
 
 	for table in siteHTML.find_all('td', class_='statistics'):
 		auths = table.find_all("strong", class_="authority-count")
 		for auth in auths:
-			authScores.append(re.search('\d+', auth.contents[0]).group(0))
+			auth_scores.append(re.search('\d+', auth.contents[0]).group(0))
 
-	return zip(siteLinks, authScores)
+	return zip(site_links, auth_scores)
 
 
 
@@ -50,17 +50,17 @@ except UnicodeDecodeError:
 
 
 
-try: 
-	for link in baseHTML.find_all(href=re.compile(SECTION + APPEND)):
-		maxPage = max(int(link.get('href')[33:].rstrip('/')), maxPage)
+for link in baseHTML.find_all(href=re.compile(SECTION + APPEND)):
+	maxPage = max(int(link.get('href')[33:].rstrip('/')), maxPage)
 
-	# Adjust by 1 since for loop is base-0
-	for pageNum in range(1,maxPage + 1):
-		# Check to see whether Mongo already has this data. If it does, then continue to the next
-		if (tech_blogs.find({ '_id': pageNum }).count() != 0):
-			print "Skipping Page: " + str(pageNum)
-			continue
+# Adjust by 1 since for loop is base-0
+for pageNum in range(1,maxPage + 1):
+	# Check to see whether Mongo already has this data. If it does, then continue to the next
+	if (tech_blogs.find({ '_id': pageNum }).count() != 0):
+		print "Skipping Page: " + str(pageNum)
+		continue
 
+	try:
 		newBlogs = getBlogData(BASE_URL + SECTION + APPEND + str(pageNum))
 		urlCounter += len(newBlogs)
 		print "Page: " + str(pageNum) + "  Added: " + str(len(newBlogs)) + " Total: " + str(urlCounter)
@@ -69,11 +69,11 @@ try:
 		if (tech_blogs.find({ '_id': pageNum }).count() == 0):
 			# Upsert URLs into a record
 			ret = tech_blogs.update({'_id': pageNum},
-				{'$push': {'b': newBlogs}},
+				{'$pushAll': {'b': newBlogs}},
 				True )
 
-except (urllib2.HTTPError, urllib2.URLError):
-	print "ERROR: Couldn't download " + BASE_URL + SECTION + pageNum 
+	except (urllib2.HTTPError, urllib2.URLError):
+		print "ERROR: Couldn't download " + BASE_URL + SECTION + APPEND + str(pageNum)
 
-except UnicodeDecodeError:
-	print "ERROR: Couldn't decode " + BASE_URL + SECTION + pageNum
+	except UnicodeDecodeError:
+		print "ERROR: Couldn't decode " + BASE_URL + SECTION + APPEND + str(pageNum)
