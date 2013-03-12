@@ -92,13 +92,14 @@ Schemas
 "pk": presented_keywords
 }</pre>
 
-<b>user_clicks - Not Implemented</b>
+<b>user_clicks</b>
 <pre>
 {
    "_id": MongoDB ID,
    "uid": 123,
    "aid": article id (if article was clicked)
    "wid": webpage id (if webpage was clicked)
+   "did": ad url (if ad was clicked)
    "ct": date/time of click
 }</pre>
 
