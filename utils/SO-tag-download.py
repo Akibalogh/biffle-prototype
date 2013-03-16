@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import hashlib
 
 connection = MongoClient()
-users = conncetion.db.users
+users = connection.db.users
 so_users = connection.perm.so_users
 
 api_key = "F9V4YsNAO1aBrgFRZlReWQ(("
@@ -14,17 +14,26 @@ so = SEAPI.SEAPI(api_key, site="stackoverflow")
 found_counter = 0
 not_found_counter = 0
 
+print "Enriching user objects with StackOverflow tags"
+
 for user in users.find(): 
 	email_hash = hashlib.md5(user['e']).hexdigest()
 	found_user = None
         found_user = so_users.find_one( { "eh" : email_hash } )
-	print found_user
         if (found_user is not None):
-        	print "Found user! e: " + user['e'] + " hash: " + str(found_user['eh'])
-		print "Fetching tags for sid: " + str(found_user['sid'])
+        	print "Fetching tags for user e: " + user['e'] + " hash: " + str(found_user['eh'])
 		tags = so.fetch_one("users/{id}/tags", id=found_user['sid'])
-		top_answer_tags = so.fetch_one("users/{id}/top-answer-tags", id=found_user['sid'])
-		top_question_tags = so.fetch_one("users/{id}/top-question-tags", id=found_user['sid'])
+		top_answer_tag_json = so.fetch_one("users/{id}/top-answer-tags", id=found_user['sid'])
+		top_question_tag_json = so.fetch_one("users/{id}/top-question-tags", id=found_user['sid'])
+
+		top_answer_tags = []
+		for tag_a in top_answer_tag_json:
+			top_answer_tags.append(tag_a['tag_name'])
+
+		top_question_tags = []
+		for tag_q in top_question_tag_json:
+			top_question_tags.append(tag_q['tag_name'])
+
 		ret = users.update({'e': user['e']},
 				   {'$push': {'tt': tags, 'ta': top_answer_tags, 'tq': top_question_tags}},
 				   True)
