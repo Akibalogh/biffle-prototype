@@ -22,9 +22,13 @@ for user in users.find():
         found_user = so_users.find_one( { "eh" : email_hash } )
         if (found_user is not None):
         	print "Fetching tags for user e: " + user['e'] + " hash: " + str(found_user['eh'])
-		tags = so.fetch_one("users/{id}/tags", id=found_user['sid'])
+		tags_json = so.fetch_one("users/{id}/tags", id=found_user['sid'])
 		top_answer_tag_json = so.fetch_one("users/{id}/top-answer-tags", id=found_user['sid'])
 		top_question_tag_json = so.fetch_one("users/{id}/top-question-tags", id=found_user['sid'])
+
+		tags = []
+		for tag in tags_json:
+			tags.append(tag['name'])
 
 		top_answer_tags = []
 		for tag_a in top_answer_tag_json:
