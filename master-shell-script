@@ -12,11 +12,16 @@ do
 	fi
 done
 
-# Enrich profiles with StackOverflow tags
+
+# Enrich profiles with additional datapoints
+# StackOverflow tags
 python $BIFFLE_PATH/utils/SO-tag-download.py
 
-# Enrich profiles with Twitter
-python $BIFFLE_PATH/utils/enrich-profiles-with-twitter.py
+# Tweets
+python $BIFFLE_PATH/utils/add-tweets.py
+
+# Add a word cloud to each profile
+python $BIFFLE_PATH/utils/add-wordclouds.py
 
 
 # Search Generation
