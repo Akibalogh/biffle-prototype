@@ -35,11 +35,14 @@ for user in users.find():
 	# https://dev.twitter.com/docs/api/1.1/get/application/rate_limit_status
 
 	if (twitter_req_remaining < 20):
-		print "INFO: Twitter requests nearly exceeded. Sleeping for 15 minutes"
+		print "INFO: Twitter requests nearly exceeded. (" + twitter_req_remaining + " remaining.) Sleeping for 15 minutes"
 		time.sleep(15 * 60)
 
 	# Initialize object containing all tweets
-	all_tweets = [ x['text'] for x in twitter_req.json ]
+	try:
+		all_tweets = [ x['text'] for x in twitter_req.json ]
+	except TypeError:
+		print "ERROR: TypeError for: " + str(twitter_req.json)
 	t_max_id = 0
 
 	# Get the next 3,000 tweets (3,200 total allowed by Twitter API)
