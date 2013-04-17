@@ -2,6 +2,7 @@ import pymongo
 from pymongo import MongoClient
 import requests
 import simplejson
+import time
 
 connection = MongoClient()
 db = connection.db
@@ -28,6 +29,14 @@ for user in users.find():
 	# Get the first 200 tweets
 	twitter_params = dict(user_id=twitter_id, include_entities=0, include_rts=1, count=200)
 	twitter_req = requests.get(twitter_timeline_api_url, params=twitter_params)
+	twitter_req_remaining = int(twitter_req.headers['x-ratelimit-remaining'])
+
+	# TODO: Instead of first requesting and then checking remaing limits, implement:
+	# https://dev.twitter.com/docs/api/1.1/get/application/rate_limit_status
+
+	if (twitter_req_remaining < 20):
+		print "INFO: Twitter requests nearly exceeded. Sleeping for 15 minutes"
+		time.sleep(15 * 60)
 
 	# Initialize object containing all tweets
 	all_tweets = [ x['text'] for x in twitter_req.json ]
@@ -48,7 +57,6 @@ for user in users.find():
 
 		print "Getting tweets for " + user['e'] + ". Page: " + str(i)
 		all_tweets += [ x['text'] for x in twitter_req.json ]
-
 
 		# TODO: If Twitter stops returning tweets, exit loop
 
