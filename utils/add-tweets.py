@@ -30,14 +30,14 @@ for user in users.find():
 	twitter_req = requests.get(twitter_timeline_api_url, params=twitter_params)
 
 	# Initialize object containing all tweets
-	all_tweets = twitter_req.json()
+	all_tweets = [ x['text'] for x in twitter_req.json ]
 	t_max_id = 0
 
 	# Get the next 3,000 tweets (3,200 total allowed by Twitter API)
 	for i in range (1, 16):
 		# Get max ID
 		ids = []
-		for tweet in twitter_req.json():
+		for tweet in twitter_req.json:
 			id = tweet['id']
 			ids.append(id)
 			if (t_max_id < id):
@@ -47,8 +47,12 @@ for user in users.find():
 		twitter_req = requests.get(twitter_timeline_api_url, params=twitter_params)
 
 		print "Getting tweets for " + user['e'] + ". Page: " + str(i)
-		all_tweets += twitter_req.json()
+		all_tweets += [ x['text'] for x in twitter_req.json ]
+
 
 		# TODO: If Twitter stops returning tweets, exit loop
 
-	user_tweets.insert(all_tweets)
+	user_tweets.update(     { 'e': user['e'] },
+				{ '$push': { 't': { '$each':  all_tweets } } },
+				True )
+
