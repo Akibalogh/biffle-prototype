@@ -36,3 +36,5 @@ nosetests.xml
 
 # Output files
 *_err*
+*output
+*out
