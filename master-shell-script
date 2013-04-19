@@ -17,9 +17,6 @@ done
 # StackOverflow tags
 python $BIFFLE_PATH/utils/SO-tag-download.py
 
-# Tweets
-python $BIFFLE_PATH/utils/add-tweets.py
-
 # Add a word cloud to each profile
 python $BIFFLE_PATH/utils/add-wordclouds.py
 
@@ -50,10 +47,11 @@ for file in $( ls $PHP_FILE_DIR ); do
 	# Skip index.html file
 	if [ $file != "index.html" ]; then
 		echo "Downloaded $file"
-		if [ ! -d "$DOWNLOAD_DIR/$file" ]; then
-			mkdir $DOWNLOAD_DIR/$file
+		dir=${file%.*}
+		if [ ! -d "$DOWNLOAD_DIR/$dir" ]; then
+			mkdir $DOWNLOAD_DIR/$dir
 		fi
-		wget $LOCALHOST_URL/$file -O $DOWNLOAD_DIR/$file/$file-$date
+		wget $LOCALHOST_URL/$file -O $DOWNLOAD_DIR/$dir/$file-$date
 	fi
 done
 
