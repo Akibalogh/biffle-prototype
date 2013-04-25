@@ -8,11 +8,11 @@ Components:
 <br><b>master-shell-script</b>: Controller for scripts below
 <br><b>profile-parse</b>: Parse LinkedIn profiles and insert them into MongoDB.
 <br><b>SO-tag-download</b>: Download StackOverflow tags for users and add them to the user object
-<br><b>/add-wordclouds</b>: Take all of user's tags and create a wordcloud for that individual user, then save it to the user's object
+<br><b>add-wordclouds</b>: Take all of user's tags and create a wordcloud for that individual user, then save it to the user's object
 <br><b>search-terms-mongo</b>: Import a data file into MongoDB that contains all of the terms that Biffle 'understands' (currently 100 Big Data database names)
 <br><b>search-gen-for-articles</b>: Generate PHP files based on terms that Biffle understands
 <br><b>parse-and-download</b>: Download and parse news articles and websites.
-<br><b>make-recommendations</b>: Make article recommendations. Currently recommends using ElasticSearch relevance score based on all words in user's word cloud
+<br><b>make-recommendations</b>: Make article recommendations. Currently recommends using ElasticSearch relevance score based on all words in user's word cloud (not just 100 database names)
 <br><b>send-recommendations</b>: Sends recommendations to users via email
 <br><b>textrank</b>:Python script that implements nltk to tokenize input text
 <br><b>/utils/3gram-keyword-dump</b>: Dump all words in a user's wordcloud
