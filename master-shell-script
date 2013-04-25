@@ -15,11 +15,10 @@ done
 
 # Enrich profiles with additional datapoints
 # StackOverflow tags
-python $BIFFLE_PATH/utils/SO-tag-download.py
+python $BIFFLE_PATH/SO-tag-download.py
 
 # Add a word cloud to each profile
-python $BIFFLE_PATH/utils/add-wordclouds.py
-
+python $BIFFLE_PATH/add-wordclouds.py
 
 # Search Generation
 WORDCLOUD_PATH=$BIFFLE_PATH/wordclouds
