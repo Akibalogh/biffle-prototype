@@ -5,12 +5,22 @@ Prototype for Biffle, a recommendation engine for Developer news
 <br>
 <br>
 Components:
-<br><b>parse-and-download</b>: Download and parse news articles and websites
-<br><b>profile-parse</b>: Parse a LinkedIn profile and insert into MongoDB
-<br><b>search-generation</b>:Generate a combination of search terms based on product names and industries
-<br>Written by Victor Hong
-<br><b>textrank</b>:Python script that implements nltk to tokenize input text.
-<br>Written by Victor Hong
+<br><b>master-shell-script</b>: Controller for scripts below
+<br><b>profile-parse</b>: Parse LinkedIn profiles and insert them into MongoDB.
+<br><b>SO-tag-download</b>: Download StackOverflow tags for users and add them to the user object
+<br><b>/add-wordclouds</b>: Take all of user's tags and create a wordcloud for that individual user, then save it to the user's object
+<br><b>search-terms-mongo</b>: Import a data file into MongoDB that contains all of the terms that Biffle 'understands' (currently 100 Big Data database names)
+<br><b>search-gen-for-articles</b>: Generate PHP files based on terms that Biffle understands
+<br><b>parse-and-download</b>: Download and parse news articles and websites.
+<br><b>make-recommendations</b>: Make article recommendations. Currently recommends using ElasticSearch relevance score based on all words in user's word cloud
+<br><b>send-recommendations</b>: Sends recommendations to users via email
+<br><b>textrank</b>:Python script that implements nltk to tokenize input text
+<br><b>/utils/3gram-keyword-dump</b>: Dump all words in a user's wordcloud
+<br><b>/utils/add-tweets</b>: Add Tweets to a user's object
+<br><b>/utils/SO-all-user-download</b>: Download entire StackOverflow database of users and their email hashes
+<br><b>/utils/technorati-scraper</b>: Download URLs for 40,000+ tech blogs from Technorati
+
+
 <br>
 
 Schemas
