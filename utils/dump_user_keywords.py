@@ -4,6 +4,9 @@ import pymongo
 from pymongo import MongoClient
 
 def print_user_keywords(users, outfile_name):
+	if (os.path.exists(outfile_name)):
+                os.remove(outfile_name)
+
 	# make a list of keywords user is interested in
 	for user in users:
 		user_recognized_keywords = user['k']
@@ -42,19 +45,24 @@ def print_user_keywords(users, outfile_name):
 		with open(outfile_name, 'a') as outfile:
 
 	                for k in user_skills:
-				outfile.write(user['e'] + '\t' + 'LI-skill' + '\t' + k + '\t' + '\n')
+				#outfile.write(user['e'] + '\t' + 'LI-skill' + '\t' + k + '\t' + '\n')
+				outfile.write(k + '\n')
 
 			for k in user_klout_keywords:
-				outfile.write(user['e'] + '\t' + 'Klout' + '\t' + k + '\t' + '\n')
+				#outfile.write(user['e'] + '\t' + 'Klout' + '\t' + k + '\t' + '\n')
+				outfile.write(k + '\n')
 
 	                for k in user_SO_tq:
-        	                outfile.write(user['e'] + '\t' + 'SO_tq' + '\t' + k + '\t' + '\n')
+        	                #outfile.write(user['e'] + '\t' + 'SO_tq' + '\t' + k + '\t' + '\n')
+				outfile.write(k + '\n')
 
 	                for k in user_SO_tt:
-        	                outfile.write(user['e'] + '\t' + 'SO_tt' + '\t' + k + '\t' + '\n')
+        	                #outfile.write(user['e'] + '\t' + 'SO_tt' + '\t' + k + '\t' + '\n')
+				outfile.write(k + '\n')
 
 	                for k in user_SO_ta:
-        	                outfile.write(user['e'] + '\t' + 'SO_ta' + '\t' + k + '\t' + '\n')
+        	                #outfile.write(user['e'] + '\t' + 'SO_ta' + '\t' + k + '\t' + '\n')
+				outfile.write(k + '\n')
 
 
 if __name__ == "__main__":
@@ -64,9 +72,6 @@ if __name__ == "__main__":
 	users = db.users.find()
 	so_users = db.so_users
 	print "User count: ", users.count()
-	outfile_name = '3gram-keyword-dump'
 	
-	if (os.path.exists(outfile_name)):
-		os.remove(outfile_name)
-	
-	print_user_keywords(users, outfile_name)
+	# CAREFUL what you pass. Will delete file named in second argument
+	print_user_keywords(users, '1gram-keyword-dump')
