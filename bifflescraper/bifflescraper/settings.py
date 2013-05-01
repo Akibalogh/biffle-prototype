@@ -10,9 +10,9 @@ BOT_NAME = 'bifflescraper'
 SPIDER_MODULES = ['bifflescraper.spiders']
 NEWSPIDER_MODULE = 'bifflescraper.spiders'
 
-#LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'INFO'
 #LOG_LEVEL = 'WARNING'
-#LOG_FILE = 'logfile'
+LOG_FILE = 'logfile'
 
 # See: http://doc.scrapy.org/en/latest/topics/settings.html
 # See: http://doc.scrapy.org/en/latest/topics/downloader-middleware.html

@@ -13,17 +13,33 @@ from pybloom import BloomFilter
 class BiffleSpider(CrawlSpider):
 	# See: http://stackoverflow.com/questions/8320730/scrapy-log-handler
 	name = 'bifflescraper'
-	allowed_domains = ['starnewsonline.com']
-	start_urls = ['http://www.starnewsonline.com/']
+
+	# Get allowed domains
+	#allowed_domains = ['starnewsonline.com']
+	allowed_domains = ['www.techcentral.ie']
+	#domain_list_path = '/root/semanticgen/domains'
+	#allowed_domains = []
+	#with open(domain_list_path) as f:
+        #	for domain in f:
+	#		allowed_domains.append(domain.rstrip('\n'))
+	
+	#start_urls = ['http://www.starnewsonline.com/']
+	start_urls = ['http://www.techcentral.ie']
+	#start_urls = []
+	#for domain in allowed_domains:
+	#	start_urls.append('http://' + domain)
+
+	# Allow all and follow links
 	rules = (
 		Rule(SgmlLinkExtractor(allow=()), callback='parse_item'),
 	)
+
+	# Start the logger
 	log.start()
 
 	def parse_item(self, response):
 		if not isinstance(response, HtmlResponse):
-		    print "ERROR!"
-		    self.log.msg('Not an HTML file: %s' % response.url, level=log.WARNING)
+		    log.msg('Not an HTML file: %s' % response.url, level=log.WARNING)
 		    return
 
 		#log.msg('Response from: %s' % response.url, level=log.INFO)
@@ -60,7 +76,7 @@ class BiffleSpider(CrawlSpider):
 			item['url'] = response.url
 			item['page'] = cleaned_text
 			item['keywords'] = ', '.join(foundlist)
-			log.msg("Keyword found in URL: %s" % ', '.join(foundlist), level=log.INFO)
+			log.msg("Keyword(s) found: %s" % ', '.join(foundlist), level=log.INFO)
 			#yield Request(response.url, callback=self.save_article_file)	
 			return item
 		else:
