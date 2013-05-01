@@ -15,11 +15,11 @@ Components:
 <br><b>make-recommendations</b>: Make article recommendations. Currently recommends using ElasticSearch relevance score based on all words in user's word cloud (not just 100 database names)
 <br><b>send-recommendations</b>: Sends recommendations to users via email
 <br><b>textrank</b>:Python script that implements nltk to tokenize input text
-<br><b>/utils/3gram-keyword-dump</b>: Dump all words in a user's wordcloud
-<br><b>/utils/add-tweets</b>: Add Tweets to a user's object
-<br><b>/utils/SO-all-user-download</b>: Download entire StackOverflow database of users and their email hashes
-<br><b>/utils/technorati-scraper</b>: Download URLs for 40,000+ tech blogs from Technorati
-
+<br><b>utils/3gram-keyword-dump</b>: Dump all words in a user's wordcloud
+<br><b>utils/add-tweets</b>: Add Tweets to a user's object
+<br><b>utils/SO-all-user-download</b>: Download entire StackOverflow database of users and their email hashes
+<br><b>utils/technorati-scraper</b>: Download URLs for 40,000+ tech blogs from Technorati
+<br><b>bifflescraper/*</b>: Scrapy implementation of Biffle scraper tool
 
 <br>
 
