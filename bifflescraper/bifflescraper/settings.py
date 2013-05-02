@@ -12,7 +12,7 @@ NEWSPIDER_MODULE = 'bifflescraper.spiders'
 
 LOG_LEVEL = 'INFO'
 #LOG_LEVEL = 'WARNING'
-LOG_FILE = 'logfile'
+LOG_FILE = 'logfile.log'
 
 # See: http://doc.scrapy.org/en/latest/topics/settings.html
 # See: http://doc.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -21,6 +21,14 @@ DOWNLOAD_DELAY = 0.25
 #DOWNLOAD_TIMEOUT = 15
 ROBOTSTXT_OBEY = True
 DOWNLOADER_STATS = True
+
+# Crawl responsibly by identifying yourself (and your website) on the user-agent
+USER_AGENT = 'test Scraper www.biffle.co' # Default
+
+DOWNLOADER_MIDDLEWARES = {
+	'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
+	'bifflescraper.middlewares.RotateUserAgentMiddleware': 400,
+}
 
 FEED_STORAGE = 'file'
 FEED_FORMAT = 'jsonlines'
@@ -50,5 +58,3 @@ FEED_STORAGES = {
 #           {'ip_port': 'PROXY2_IP:PORT_NUMBER', 'user_pass': 'username:password'},
 #           {'ip_port': 'PROXY3_IP:PORT_NUMBER', 'user_pass': ''},]
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'test Scraper www.biffle.co'

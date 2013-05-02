@@ -7,6 +7,7 @@ from scrapy.item import Item, Field
 
 class BiffleItem(Item):
     # define the fields for your item here like:
-    page = Field()
+    body = Field()
     keywords = Field()
     url = Field()
+    process_date = Field()
