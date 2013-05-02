@@ -84,12 +84,8 @@ Schemas
 "uid": user id
 "aid": article id
 "rt": recommend_datetime
-"ct": click_datetime
-"st": save_datetime
 "uk": user_keywords_list
 "pk": presented_keywords
-"lt": like_datetime
-"sit": share_datetime
 }</pre>
 
 <b>recommended_webpages</b>
