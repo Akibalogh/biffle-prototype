@@ -17,13 +17,20 @@ LOG_FILE = 'logfile.log'
 # See: http://doc.scrapy.org/en/latest/topics/settings.html
 # See: http://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 COOKIES_ENABLED = False
-DOWNLOAD_DELAY = 0.25
+#DOWNLOAD_DELAY = 0.25
+DOWNLOAD_DELAY = 2
 #DOWNLOAD_TIMEOUT = 15
 ROBOTSTXT_OBEY = True
 DOWNLOADER_STATS = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'test Scraper www.biffle.co' # Default
+
+# Crawl in BFO order, not DFO order
+# See: http://doc.scrapy.org/en/latest/faq.html
+DEPTH_PRIORITY = 1
+SCHEDULER_DISK_QUEUE = 'scrapy.squeue.PickleFifoDiskQueue'
+SCHEDULER_MEMORY_QUEUE = 'scrapy.squeue.FifoMemoryQueue'
 
 DOWNLOADER_MIDDLEWARES = {
 	'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
@@ -50,11 +57,9 @@ FEED_STORAGES = {
 }
 
 
-#SPIDER_MIDDLEWARES = {
-#    'bifflescraper.middlewares.ProxyMiddleware': None,
-#}
+SPIDER_MIDDLEWARES = {
+    'bifflescraper.middlewares.ProxyMiddleware': None,
+}
 
-#PROXIES = [{'ip_port': 'xx.xx.xx.xx:xxxx', 'user_pass': 'foo:bar'},
-#           {'ip_port': 'PROXY2_IP:PORT_NUMBER', 'user_pass': 'username:password'},
-#           {'ip_port': 'PROXY3_IP:PORT_NUMBER', 'user_pass': ''},]
+PROXIES = [{'ip_port': 'us.proxymesh.com:31280', 'akibalogh': 'Generation1234!'},]
 
