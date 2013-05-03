@@ -11,6 +11,7 @@ from pybloom import BloomFilter
 #from pybloom import ScalableBloomFilter
 from datetime import datetime
 import urlparse
+import re
 
 class BiffleSpider(CrawlSpider):
 	# See: http://stackoverflow.com/questions/8320730/scrapy-log-handler
@@ -67,8 +68,8 @@ class BiffleSpider(CrawlSpider):
 
 		foundlist = []
 		for keyword in keywordset: # TODO: Is there a more efficient way to do this?
-			# Add spaces on either side to make sure entire words are matched
-			if ((' ' + keyword + ' ') in cleaned_text):
+			# Look at word boundaries to match entire words only
+			if (re.search(r'\b' + re.escape(keyword) + r'\b', cleaned_text)):
 				foundlist.append(keyword)
 
 		# Parse this page		
