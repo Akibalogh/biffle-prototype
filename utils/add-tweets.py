@@ -40,6 +40,7 @@ for user in users.find():
 
 	# Initialize object containing all tweets
 	try:
+		# NOTE: We are only saving the text of the Tweet and are throwing away all metadata
 		all_tweets = [ x['text'] for x in twitter_req.json() ]
 	except TypeError:
 		print "ERROR: TypeError for: " + str(twitter_req.json)
@@ -60,6 +61,7 @@ for user in users.find():
 
 		print "Getting tweets for " + user['e'] + ". Page: " + str(i)
 		all_tweets += [ x['text'] for x in twitter_req.json() ]
+
 
 		# TODO: If Twitter stops returning tweets, exit loop
 
