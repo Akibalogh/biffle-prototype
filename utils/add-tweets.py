@@ -9,6 +9,10 @@ db = connection.db
 users = db.users
 user_tweets = db.user_tweets
 
+test_twitter_ids = ['24938383', '21750481', '15655469']
+
+#for twitter_id in test_twitter_ids:
+
 for user in users.find():
 	# Get twitter_ids for users
 	twitter_id = None
