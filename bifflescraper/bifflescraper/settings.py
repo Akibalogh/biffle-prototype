@@ -57,9 +57,9 @@ FEED_STORAGES = {
 }
 
 
-SPIDER_MIDDLEWARES = {
-    'bifflescraper.middlewares.ProxyMiddleware': None,
-}
+#SPIDER_MIDDLEWARES = {
+#    'bifflescraper.middlewares.ProxyMiddleware': None,
+#}
 
-PROXIES = [{'ip_port': 'us.proxymesh.com:31280', 'akibalogh': 'Generation1234!'},]
+#PROXIES = [{'ip_port': 'us.proxymesh.com:31280', 'akibalogh': 'Generation1234!'},]
 

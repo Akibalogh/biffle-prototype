@@ -54,12 +54,22 @@ class BiffleSpider(CrawlSpider):
 	def __init__(self, *a, **kw):
         	super(BiffleSpider, self).__init__(*a, **kw)
 		dispatcher.connect(self.reduce_at_finish, signals.spider_closed)
+		# Load keyword list
+		keywordfilepath = '/root/biffle-prototype/utils/1gram-keyword-dump'
+		global keywordlist
+		keywordlist = []
+		with open(keywordfilepath) as f:
+		        for keyword in f:
+				# TODO: Figure out a better way to implement filters. Here, filter 2-letter keywords.
+				if (len(keyword) > 2):
+					keywordlist.append(keyword.rstrip('\n'))
+
 
 	def map_keyword_count(self, found_list):
 		filename = '/root/biffle-prototype/bifflescraper/keyword_map'
 		with open(filename, 'a') as f:
 			for keyword in found_list:
-				f.write(keyword + ' 1\n')
+				f.write(keyword + '\t' + '1' + '\n')
 
 	def reduce_at_finish(self):
 		keywords = {}
@@ -71,7 +81,7 @@ class BiffleSpider(CrawlSpider):
 
 		try:
 			for line in infile.readlines():
-				(keyword, value) = line.split(' ')
+				(keyword, value) = line.split('\t')
 
 				if (keywords.has_key(keyword)):
 					keywords[keyword] = keywords[keyword] + int(value)
@@ -91,12 +101,12 @@ class BiffleSpider(CrawlSpider):
 		# Write the data structure to a file
 		outfile = codecs.open(filename, 'a+', encoding='utf-8')
 		for key, value in keywords.items():
-				outfile.write(key + ' ' + str(value) + '\n')
+				outfile.write(key + '\t' + str(value) + '\n')
 		outfile.close()
 
 
 	#                              Set search depth here
-	def parse_page(self, response, depth=2):
+	def parse_page(self, response, depth=1):
 		if not isinstance(response, HtmlResponse):
 		    log.msg('Not an HTML file: %s' % response.url, level=log.WARNING)
 		    return
@@ -104,15 +114,6 @@ class BiffleSpider(CrawlSpider):
 		log.msg('Response from: %s' % response.url, level=log.INFO)
 		url_bf.add(response.url)
 	
-		# TODO: Shift this into class __init__ code?
-		keywordfilepath = '/root/biffle-prototype/utils/1gram-keyword-dump'
-		keywordlist = []
-		with open(keywordfilepath) as f:
-		        for keyword in f:
-				# TODO: Figure out a better way to implement. Here, filter 2-letter keywords.
-				if (len(keyword) > 2):
-					keywordlist.append(keyword.rstrip('\n'))
-
 		# TODO: Extract page title
 	
 		extractor = Extractor(extractor='ArticleExtractor', html=response.body_as_unicode())
@@ -145,7 +146,10 @@ class BiffleSpider(CrawlSpider):
 			log.msg('Links on page: %s' % len(links), level=log.INFO)
 			for l in links:
 				l = urlparse.urljoin(response.url, l)
-				if (l not in url_bf):
+				if (l in url_bf):
+					pass
+					#log.msg('Duplicate URL found: %s' % l, level=log.INFO)
+				else:
 					url_bf.add(l)
 					#log.msg('Found link: %s | From URL: %s' % (l, response.url), level=log.INFO)
 					# Decrement depth for next layer of links
