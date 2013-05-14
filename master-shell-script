@@ -66,4 +66,4 @@ python $BIFFLE_PATH/make-recommendations.py
 
 
 # Send Articles
-python $BIFFLE_PATH/send-recommendations.py
+python $BIFFLE_PATH/send-recommendations.py export
