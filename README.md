@@ -34,7 +34,8 @@ Schemas
 "sc": "score"
 "c": "code"
 "sd": "search date"
-"pd": "publish date"
+"pubd": "publish date" (guessed date)
+"procd": "processed date"
 "url" "article url"
 "t": "article title"
 "abs": "summary text"
