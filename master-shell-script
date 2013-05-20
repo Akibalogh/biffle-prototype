@@ -67,3 +67,7 @@ python $BIFFLE_PATH/make-recommendations.py
 
 # Send Articles
 python $BIFFLE_PATH/send-recommendations.py export
+
+
+# Dump keywords and send to Subhankar's API
+python /root/biffle-prototype/utils/curate-wordcloud.py dump
