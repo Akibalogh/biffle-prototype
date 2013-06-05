@@ -45,7 +45,7 @@ class BiffleSpider(CrawlSpider):
 
 	# Allow all and follow links
 	rules = (
-		Rule(SgmlLinkExtractor(allow=()), callback='parse_page', follow=True),
+		Rule(SgmlLinkExtractor(allow=()), callback='parse_page', follow=False),
 	)
 
 	# Start the logger
@@ -55,7 +55,8 @@ class BiffleSpider(CrawlSpider):
         	super(BiffleSpider, self).__init__(*a, **kw)
 		dispatcher.connect(self.reduce_at_finish, signals.spider_closed)
 		# Load keyword list
-		keywordfilepath = '/root/biffle-prototype/utils/1gram-keyword-dump'
+		# TODO: Get today's date and open corresponding file
+		keywordfilepath = '/root/biffle-prototype/sub_api/keyword_2013_05_14.txt'
 		global keywordlist
 		keywordlist = []
 		with open(keywordfilepath) as f:
@@ -105,8 +106,14 @@ class BiffleSpider(CrawlSpider):
 		outfile.close()
 
 
-	#                              Set search depth here
-	def parse_page(self, response, depth=1):
+	#def parse_page(self, response, depth=1):
+	def parse_page(self, response):
+		if response.meta.has_key('crawldepth'):
+			depth = response.meta['crawldepth']
+		else:
+		#       Set search depth here
+			depth = 1
+		log.msg('Depth = %s' % str(depth), level=log.INFO)
 		if not isinstance(response, HtmlResponse):
 		    log.msg('Not an HTML file: %s' % response.url, level=log.WARNING)
 		    return
@@ -144,6 +151,8 @@ class BiffleSpider(CrawlSpider):
 			hxs = HtmlXPathSelector(response)
 			links = hxs.select('//a/@href').extract()
 			log.msg('Links on page: %s' % len(links), level=log.INFO)
+			depth -= 1
+			log.msg('Depth has been decremented, new value = %s' % str(depth), level=log.INFO)
 			for l in links:
 				l = urlparse.urljoin(response.url, l)
 				if (l in url_bf):
@@ -153,6 +162,8 @@ class BiffleSpider(CrawlSpider):
 					url_bf.add(l)
 					#log.msg('Found link: %s | From URL: %s' % (l, response.url), level=log.INFO)
 					# Decrement depth for next layer of links
-					callback = lambda response: self.parse_page(response, depth=(depth - 1))
-					yield Request(l, callback=callback)
-
+					#callback = lambda response, depth = depth: self.parse_page(response, depth)			
+					callback = lambda response: self.parse_page(response)
+					request = Request(l, callback=callback)
+					request.meta['crawldepth'] = depth
+					yield request
