@@ -49,17 +49,29 @@ for user in users.find():
 	except TypeError:
 		print "ERROR: TypeError for: " + str(twitter_req.json)
 	t_max_id = 0
-
+	flag = 0
 	# Get the next 3,000 tweets (3,200 total allowed by Twitter API)
 	for i in range (1, 16):
 		# Get max ID
 		ids = []
+		'''
 		for tweet in twitter_req.json():
 			id = tweet['id']
 			ids.append(id)
 			if (t_max_id < id):
 				t_max_id = id
-
+		'''		
+		for tweet in twitter_req.json():
+			if (flag == 0):
+				t_max_id = tweet['id']
+				flag = 1
+			else:
+				id = tweet['id']
+				if (t_max_id > id):   #make t_max_id be the smallest one 
+					t_max_id = id
+			ids.append(tweet['id'])	
+		flag = 0 #reset flag for next loop
+		
 		twitter_params = dict(user_id=twitter_id, include_entities=0, include_rts=1, count=200, max_id=t_max_id)
 		twitter_req = requests.get(twitter_timeline_api_url, params=twitter_params)
 
