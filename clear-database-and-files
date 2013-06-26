@@ -1,0 +1,7 @@
+#!/bin/bash
+
+rm -rf /var/www/html/search-scripts/*
+rm -rf /data/search-results/*
+rm -rf /data/article-files/*
+mongo db --eval "db.dropDatabase()"
+curl -XDELETE 'http://localhost:9200/article/text/'
