@@ -1,0 +1,15 @@
+#!/bin/bash
+
+curl -XGET  'http://10.32.43.66:9200/article/text/_search?pretty=true' -d '
+{
+     "query" : {
+            "term": { "text": "hadoop c++"},
+            "range" : {
+		    "date": {
+			"gte": "2013-04-20",
+			"le": "2013-04-30"
+		    }
+            }
+     }
+}
+ '

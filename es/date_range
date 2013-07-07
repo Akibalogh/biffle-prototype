@@ -1,0 +1,23 @@
+#!/bin/bash
+
+curl -XGET  'http://10.32.43.66:9200/article/text/_search?pretty=true' -d '
+{
+    "query" : {
+      "filtered": {
+            "query" : {
+              "term": { "text": "hadoop"}
+            },
+            "filter" : {
+              	"numeric_range": {
+		    "date": {
+			"gte": "2013-04-25",
+			"le": "2013-04-30"
+		    }
+		}
+            }
+      }
+    },
+    "size": 1,
+    "from": 0
+}
+'
