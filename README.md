@@ -14,7 +14,6 @@ Components:
 <br><b>parse-and-download</b>: Download and parse news articles and websites.
 <br><b>make-recommendations</b>: Make article recommendations. Currently recommends using ElasticSearch relevance score based on all words in user's word cloud (not just 100 database names)
 <br><b>send-recommendations</b>: Sends recommendations to users via email
-<br><b>textrank</b>:Python script that implements nltk to tokenize input text
 <br><b>utils/3gram-keyword-dump</b>: Dump all words in a user's wordcloud
 <br><b>utils/add-tweets</b>: Add Tweets to a user's object
 <br><b>utils/SO-all-user-download</b>: Download entire StackOverflow database of users and their email hashes
@@ -122,8 +121,6 @@ Schemas
   "in": "computer software",
   "k": ["Greenplum", "InfiniDB"]
 }</pre>
-<br>
-<b>TODO: Add weighted keyword?</b>
 <br>
 
 <b>so_users</b>
