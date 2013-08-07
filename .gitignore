@@ -39,3 +39,6 @@ nosetests.xml
 *output
 *out
 *keyword-dump
+
+# Password file
+local_passwords.py

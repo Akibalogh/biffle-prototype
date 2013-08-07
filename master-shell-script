@@ -38,7 +38,7 @@ python $BIFFLE_PATH/search-gen-for-articles.py
 #  Download latest serch API results
 PHP_FILE_DIR=/var/www/html/search-scripts
 DOWNLOAD_DIR=/data/search-results
-LOCALHOST_URL=http://50.22.200.186/search-scripts
+LOCALHOST_URL=http://localhost/search-scripts
 date=`date +"%m-%d-%Y"`
 
 for file in $( ls $PHP_FILE_DIR ); do
