@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl -XGET  'http://10.32.43.66:9200/article/text/_search?pretty=true' -d '
+curl -XGET  'http://localhost:9200/article/text/_search?pretty=true' -d '
 {
     "query" : {
       "filtered": {

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-curl -XDELETE  'http://10.32.43.66:9200/article/text/mapping'
+curl -XDELETE  'http://localhost:9200/article/text/mapping'
 
-curl -XPUT  'http://10.32.43.66:9200/article/text/_mapping?ignore_conflicts=True' -d '
+curl -XPUT  'http://localhost:9200/article/text/_mapping?ignore_conflicts=True' -d '
 {
     "text": {
       "properties": {
